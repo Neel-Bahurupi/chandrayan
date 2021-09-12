@@ -1,7 +1,10 @@
-const express = require('express')
+require('dotenv').config();
+const express = require('express');
 const app = express();
-const Blog = require('./models/blog')
 const mongoose = require('mongoose');
+const authJwt = require('./helpers/jwt');
+
+
 mongoose.connect('mongodb://localhost:27017/chandrayan',
     {
         useNewUrlParser: true,
@@ -11,12 +14,20 @@ mongoose.connect('mongodb://localhost:27017/chandrayan',
     console.log('connection successful');
 })
 
-app.get('/blogs', async(req, res) => {
+//Importing Routes
+const articles= require('./routes/articles');
+const auth=require('./routes/auth');
 
-    //fetch blogs from database
-    const blogs = await Blog.find({});
-    res.send({ blogs });
-})
+//Middle Waares
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use('/articles',articles);
+app.use('/auth',auth);
+app.use(authJwt());
+
+
+
+
 
 app.listen(3000, () => {
     console.log('listening to port 3000');
