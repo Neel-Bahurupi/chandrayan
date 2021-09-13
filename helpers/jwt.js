@@ -1,14 +1,13 @@
 const expressJwt = require('express-jwt');
 
 function authJwt(){
-    const secret = process.env.SECRET;
+    const secret = process.env.SECRET_KEY;
     return expressJwt({
         secret,
         algorithms: ['sha1', 'RS256', 'HS256'],
-        isRevoked: isRevoked
     }).unless({
         path: [
-            {url: /\/auth(.*)/, methods: ['GET', 'OPTIONS']},
+            {url: /\/auth(.*)/, methods: ['POST', 'OPTIONS']},
         ]
     });
 }

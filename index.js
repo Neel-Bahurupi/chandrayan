@@ -3,15 +3,15 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const authJwt = require('./helpers/jwt');
+const errorHandlerJwt = require('./helpers/error-handler');
 
-
-mongoose.connect('mongodb://localhost:27017/chandrayan',
+mongoose.connect(process.env.DB_CONNECTION,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }
     , () => {
-    console.log('connection successful');
+    console.log('connection to DB successful');
 })
 
 //Importing Routes
@@ -21,12 +21,10 @@ const auth=require('./routes/auth');
 //Middle Waares
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(authJwt());
+app.use(errorHandlerJwt);
 app.use('/articles',articles);
 app.use('/auth',auth);
-app.use(authJwt());
-
-
-
 
 
 app.listen(3000, () => {

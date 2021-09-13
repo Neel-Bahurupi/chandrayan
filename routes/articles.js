@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const express= require('express');
 const Article = require('../models/article');
 
@@ -9,33 +8,34 @@ router.get('/',async(req,res)=>{
 });
 
 router.post('/', async(req, res) => {
-    /*const { title, company_name, date_posted, ctc, on_of_campus, author } = req.body;
+    const { title, company_name, date_posted, ctc, on_campus, author } = req.body;
     const newArticle = new Article({
-        title, company_name, date_posted, ctc, on_of_campus, author
-    })
-    await newBlog.save();
-    res.sendStatus(200);*/
-    res.send('Random');
-});
-
-router.delete('/', async(req, res) => {
-    /*const { title, company_name, date_posted, ctc, on_of_campus, author } = req.body;
-    const newArticle = new Article({
-        title, company_name, date_posted, ctc, on_of_campus, author
+        title, company_name, date_posted, ctc, on_campus, author
     })
     await newArticle.save();
-    res.sendStatus(200);*/
-    res.send('Random');
+    res.status(200).send(newArticle);
 });
 
-router.put('/:id', async(req, res) => {
-    /*const { title, company_name, date_posted, ctc, on_of_campus, author } = req.body;
-    const newArticle = new Article({
+router.delete('/:id', async (req, res) => {
+    const id = req.params.id;
+
+    const deletedArticle = await Article.findByIdAndRemove(id);
+    
+    if(!deletedArticle)
+        return res.status(400).send('Article not found');
+
+    res.status(200).send(deletedArticle);
+});
+
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { title, company_name, date_posted, ctc, on_of_campus, author } = req.body;
+    const article = await Article.findByIdAndUpdate(id, {
         title, company_name, date_posted, ctc, on_of_campus, author
-    })
-    await newArticle.save();
-    res.sendStatus(400);*/
-    res.send('Random');
+    },
+        {useFindAndModify:false}
+    )
+    res.status(200).send(article);
 });
 
 module.exports = router ;

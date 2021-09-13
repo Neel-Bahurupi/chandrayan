@@ -20,6 +20,6 @@ const articleSchema = new Schema({
     }
 })
 
-const Article = mongoose.model('blog', articleSchema);
+const Article = mongoose.model('article', articleSchema);
 
 module.exports = Article;
